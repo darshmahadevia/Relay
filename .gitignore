@@ -1,3 +1,5 @@
 .DS_Store
 bin/
 coverage.out
+.venv/
+__pycache__/

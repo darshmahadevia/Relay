@@ -1,0 +1,54 @@
+go run ./cmd/demo
+Backend started at http://127.0.0.1:54584
+Proxy started at http://127.0.0.1:54585
+GET /echo?message=hello -> 200 request_id=req-1
+GET /echo?message=hello
+GET /healthz -> 200 request_id=req-2
+{"status":"ok"}
+GET /slow -> 502 request_id=req-3
+upstream unavailable
+GET /echo -> 200 request_id=req-4
+GET /echo
+GET /unstable -> 502 request_id=req-5
+backend failed
+GET /unstable -> 502 request_id=req-6
+backend failed
+GET /unstable -> 502 request_id=req-7
+backend failed
+GET /unstable -> 502 request_id=req-8
+backend failed
+GET /unstable -> 502 request_id=req-9
+backend failed
+GET /unstable -> 503 request_id=req-10
+upstream circuit open
+Waiting 10 seconds for the recovery probe
+GET /unstable -> 200 request_id=req-11
+backend recovered
+GET /metrics -> 200 request_id=req-12
+# HELP proxy_requests_total Total HTTP requests handled by the proxy.
+# TYPE proxy_requests_total counter
+proxy_requests_total 11
+# HELP proxy_errors_total Total requests with a 5xx response or aborted transfer.
+# TYPE proxy_errors_total counter
+proxy_errors_total 7
+# HELP proxy_aborted_total Total response transfers aborted before completion.
+# TYPE proxy_aborted_total counter
+proxy_aborted_total 0
+# HELP proxy_in_flight Requests currently being forwarded upstream.
+# TYPE proxy_in_flight gauge
+proxy_in_flight 0
+# HELP proxy_rate_limited_total Requests rejected by the rate limiter.
+# TYPE proxy_rate_limited_total counter
+proxy_rate_limited_total 0
+# HELP proxy_circuit_open_total Requests rejected because the upstream circuit was open.
+# TYPE proxy_circuit_open_total counter
+proxy_circuit_open_total 1
+# HELP proxy_upstream_failures_total Upstream attempts that produced a 5xx response, proxy error, or aborted transfer.
+# TYPE proxy_upstream_failures_total counter
+proxy_upstream_failures_total 6
+Separate proxy with a one-request-per-second limit
+GET /echo -> 200 request_id=req-13
+GET /echo
+GET /echo -> 429 request_id=req-14
+rate limit exceeded
+PASS forwarding, liveness, timeout, circuit opening and recovery, metrics, rate limiting

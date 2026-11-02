@@ -1,0 +1,69 @@
+Date: 2026-11-02T21:14:38Z
+go version go1.27.3 darwin/arm64
+Darwin arm64
+Apple M4
+10
+17179869184
+16:14  up 1 day,  6:24, 1 user, load averages: 4.92 4.52 3.56
+Payload: 1024 bytes; warmup: 20 requests; keep-alive: on; JSON logs: /dev/null
+GOMAXPROCS and client concurrency: 1,4; duration per sample: 1s
+
+Round 1 of 5
+goos: darwin
+goarch: arm64
+pkg: github.com/darshm/reverseproxy/internal/proxy
+cpu: Apple M4
+BenchmarkHTTP/direct           	   47329	     23566 ns/op	  43.45 MB/s	     47329 backend-requests	         0 errors	         0.02329 p50-ms	         0.02933 p95-ms	     42433 req/s	    8338 B/op	      78 allocs/op
+BenchmarkHTTP/direct-4         	  129013	      9045 ns/op	 113.21 MB/s	    129013 backend-requests	         0 errors	         0.03092 p50-ms	         0.06746 p95-ms	    110558 req/s	    8337 B/op	      77 allocs/op
+BenchmarkHTTP/proxy            	   20968	     55368 ns/op	  18.49 MB/s	     20968 backend-requests	         0 errors	         0.05454 p50-ms	         0.06825 p95-ms	     18061 req/s	   49745 B/op	     187 allocs/op
+BenchmarkHTTP/proxy-4          	   55832	     22571 ns/op	  45.37 MB/s	     55832 backend-requests	         0 errors	         0.07483 p50-ms	         0.2078 p95-ms	     44305 req/s	   49906 B/op	     186 allocs/op
+PASS
+ok  	github.com/darshm/reverseproxy/internal/proxy	5.988s
+
+Round 2 of 5
+goos: darwin
+goarch: arm64
+pkg: github.com/darshm/reverseproxy/internal/proxy
+cpu: Apple M4
+BenchmarkHTTP/direct           	   50108	     24187 ns/op	  42.34 MB/s	     50108 backend-requests	         0 errors	         0.02354 p50-ms	         0.02908 p95-ms	     41345 req/s	    8336 B/op	      78 allocs/op
+BenchmarkHTTP/direct-4         	  131908	      9040 ns/op	 113.27 MB/s	    131908 backend-requests	         0 errors	         0.03117 p50-ms	         0.06504 p95-ms	    110618 req/s	    8336 B/op	      77 allocs/op
+BenchmarkHTTP/proxy            	   21258	     58323 ns/op	  17.56 MB/s	     21258 backend-requests	         0 errors	         0.05475 p50-ms	         0.08129 p95-ms	     17146 req/s	   49744 B/op	     187 allocs/op
+BenchmarkHTTP/proxy-4          	   56313	     22362 ns/op	  45.79 MB/s	     56313 backend-requests	         0 errors	         0.07521 p50-ms	         0.2063 p95-ms	     44718 req/s	   49906 B/op	     187 allocs/op
+PASS
+ok  	github.com/darshm/reverseproxy/internal/proxy	6.161s
+
+Round 3 of 5
+goos: darwin
+goarch: arm64
+pkg: github.com/darshm/reverseproxy/internal/proxy
+cpu: Apple M4
+BenchmarkHTTP/direct           	   48378	     23821 ns/op	  42.99 MB/s	     48378 backend-requests	         0 errors	         0.02329 p50-ms	         0.02842 p95-ms	     41979 req/s	    8338 B/op	      78 allocs/op
+BenchmarkHTTP/direct-4         	  134532	      9063 ns/op	 112.99 MB/s	    134532 backend-requests	         0 errors	         0.03129 p50-ms	         0.06521 p95-ms	    110344 req/s	    8345 B/op	      78 allocs/op
+BenchmarkHTTP/proxy            	   21441	     54155 ns/op	  18.91 MB/s	     21441 backend-requests	         0 errors	         0.05367 p50-ms	         0.06479 p95-ms	     18466 req/s	   49744 B/op	     187 allocs/op
+BenchmarkHTTP/proxy-4          	   55987	     22209 ns/op	  46.11 MB/s	     55987 backend-requests	         0 errors	         0.07442 p50-ms	         0.2053 p95-ms	     45027 req/s	   49906 B/op	     187 allocs/op
+PASS
+ok  	github.com/darshm/reverseproxy/internal/proxy	6.041s
+
+Round 4 of 5
+goos: darwin
+goarch: arm64
+pkg: github.com/darshm/reverseproxy/internal/proxy
+cpu: Apple M4
+BenchmarkHTTP/direct           	   49072	     23887 ns/op	  42.87 MB/s	     49072 backend-requests	         0 errors	         0.02312 p50-ms	         0.02833 p95-ms	     41865 req/s	    8337 B/op	      78 allocs/op
+BenchmarkHTTP/direct-4         	  133377	      9177 ns/op	 111.58 MB/s	    133377 backend-requests	         0 errors	         0.03175 p50-ms	         0.06600 p95-ms	    108967 req/s	    8336 B/op	      77 allocs/op
+BenchmarkHTTP/proxy            	   21502	     55508 ns/op	  18.45 MB/s	     21502 backend-requests	         0 errors	         0.05383 p50-ms	         0.06496 p95-ms	     18015 req/s	   49744 B/op	     187 allocs/op
+BenchmarkHTTP/proxy-4          	   56176	     22494 ns/op	  45.52 MB/s	     56176 backend-requests	         0 errors	         0.07496 p50-ms	         0.2084 p95-ms	     44456 req/s	   49898 B/op	     186 allocs/op
+PASS
+ok  	github.com/darshm/reverseproxy/internal/proxy	6.112s
+
+Round 5 of 5
+goos: darwin
+goarch: arm64
+pkg: github.com/darshm/reverseproxy/internal/proxy
+cpu: Apple M4
+BenchmarkHTTP/direct           	   48895	     23942 ns/op	  42.77 MB/s	     48895 backend-requests	         0 errors	         0.02333 p50-ms	         0.02838 p95-ms	     41768 req/s	    8337 B/op	      78 allocs/op
+BenchmarkHTTP/direct-4         	  131646	      9176 ns/op	 111.59 MB/s	    131646 backend-requests	         0 errors	         0.03183 p50-ms	         0.06600 p95-ms	    108977 req/s	    8336 B/op	      77 allocs/op
+BenchmarkHTTP/proxy            	   21380	     54862 ns/op	  18.67 MB/s	     21380 backend-requests	         0 errors	         0.05371 p50-ms	         0.06442 p95-ms	     18228 req/s	   49744 B/op	     187 allocs/op
+BenchmarkHTTP/proxy-4          	   54289	     22395 ns/op	  45.72 MB/s	     54289 backend-requests	         0 errors	         0.07525 p50-ms	         0.2068 p95-ms	     44653 req/s	   49905 B/op	     186 allocs/op
+PASS
+ok  	github.com/darshm/reverseproxy/internal/proxy	6.040s

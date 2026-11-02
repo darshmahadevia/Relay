@@ -11,14 +11,21 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.26.x', '1.27.x']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version-file: go.mod
+          go-version: ${{ matrix.go-version }}
           cache: true
       - run: test -z "$(gofmt -l cmd internal)"
       - run: go test -race -coverprofile=coverage.out -covermode=atomic ./...
       - run: go tool cover -func=coverage.out
       - run: go vet ./...
-      - run: go build -trimpath ./cmd/proxy
+      - run: go build -trimpath ./cmd/...
+      - if: matrix.go-version == '1.27.x'
+        run: make demo
+      - if: matrix.go-version == '1.27.x'
+        run: make check-dashboard

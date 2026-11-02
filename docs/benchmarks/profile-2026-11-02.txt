@@ -1,0 +1,20 @@
+File: reverseproxy-benchmark.test
+Type: cpu
+Time: 2026-11-02 16:09:41 EST
+Duration: 3.60s, Total samples = 9.26s (256.91%)
+Showing nodes accounting for 8.50s, 91.79% of 9.26s total
+Dropped 218 nodes (cum <= 0.05s)
+Showing top 12 nodes out of 116
+      flat  flat%   sum%        cum   cum%
+        6s 64.79% 64.79%         6s 64.79%  syscall.rawsyscalln
+     0.85s  9.18% 73.97%      0.85s  9.18%  runtime.kevent
+     0.54s  5.83% 79.81%      0.54s  5.83%  runtime.usleep
+     0.49s  5.29% 85.10%      0.49s  5.29%  runtime.pthread_cond_wait
+     0.33s  3.56% 88.66%      0.34s  3.67%  runtime.pthread_cond_signal
+     0.14s  1.51% 90.17%      0.14s  1.51%  runtime.pthread_kill
+     0.07s  0.76% 90.93%      0.07s  0.76%  runtime.pthread_cond_timedwait_relative_np
+     0.02s  0.22% 91.14%      6.02s 65.01%  internal/poll.ignoringEINTRIO (inline)
+     0.02s  0.22% 91.36%      0.29s  3.13%  runtime.lock2
+     0.02s  0.22% 91.58%      0.06s  0.65%  runtime.mallocgcSmallScanNoHeader
+     0.01s  0.11% 91.68%      3.37s 36.39%  internal/poll.(*FD).Write
+     0.01s  0.11% 91.79%      0.06s  0.65%  net/http.(*Transport).roundTrip

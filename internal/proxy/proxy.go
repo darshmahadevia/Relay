@@ -71,6 +71,7 @@ func New(cfg Config) (*Proxy, error) {
 	transport := newUpstreamTransport(cfg.UpstreamTimeout)
 	upstream := httputil.NewSingleHostReverseProxy(target)
 	upstream.Transport = transport
+	upstream.ErrorLog = slog.NewLogLogger(cfg.Logger.Handler(), slog.LevelError)
 	upstream.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
 		cfg.Logger.Error("upstream request failed",
 			"request_id", r.Header.Get(requestIDHeader),
@@ -212,11 +213,9 @@ func (p *Proxy) guard(next http.Handler) http.Handler {
 		defer p.metrics.inFlight.Add(-1)
 
 		bw := &responseWriter{ResponseWriter: w}
+		completed := false
 		defer func() {
-			if bw.status == 0 {
-				return
-			}
-			if bw.status >= http.StatusInternalServerError {
+			if !completed || bw.Status() >= http.StatusInternalServerError {
 				p.metrics.upstreamFailures.Add(1)
 				p.breaker.recordFailure(permit)
 				return
@@ -225,6 +224,7 @@ func (p *Proxy) guard(next http.Handler) http.Handler {
 		}()
 
 		next.ServeHTTP(bw, r)
+		completed = true
 	})
 }
 
@@ -280,31 +280,38 @@ func loggingMiddleware(next http.Handler, logger *slog.Logger, m *metrics) http.
 		sw := &responseWriter{ResponseWriter: w, requestID: requestID}
 
 		defer func() {
-			if recovered := recover(); recovered != nil {
-				// ReverseProxy uses ErrAbortHandler to intentionally terminate a
-				// connection after a streaming copy error. Do not turn that into
-				// a normal, possibly truncated response.
+			recovered := recover()
+			aborted := false
+			if recovered != nil {
 				if err, ok := recovered.(error); ok && errors.Is(err, http.ErrAbortHandler) {
-					panic(recovered)
-				}
-				logger.Error("request handler panicked", "request_id", requestID, "panic", recovered)
-				if sw.status == 0 {
-					http.Error(sw, "internal server error", http.StatusInternalServerError)
+					aborted = true
+				} else {
+					logger.Error("request handler panicked", "request_id", requestID, "panic", recovered)
+					if sw.status == 0 {
+						http.Error(sw, "internal server error", http.StatusInternalServerError)
+					}
 				}
 			}
 
 			status := sw.Status()
 			m.requests.Add(1)
-			if status >= http.StatusInternalServerError {
+			if status >= http.StatusInternalServerError || aborted {
 				m.errors.Add(1)
+			}
+			if aborted {
+				m.aborted.Add(1)
 			}
 			logger.Info("request completed",
 				"request_id", requestID,
 				"method", r.Method,
 				"path", r.URL.Path,
 				"status", status,
+				"aborted", aborted,
 				"duration_ms", time.Since(started).Milliseconds(),
 			)
+			if aborted {
+				panic(recovered)
+			}
 		}()
 
 		next.ServeHTTP(sw, r)

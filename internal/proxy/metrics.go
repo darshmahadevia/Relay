@@ -11,6 +11,7 @@ import (
 type metrics struct {
 	requests         atomic.Uint64
 	errors           atomic.Uint64
+	aborted          atomic.Uint64
 	inFlight         atomic.Int64
 	rateLimited      atomic.Uint64
 	circuitOpen      atomic.Uint64
@@ -22,11 +23,12 @@ func (m *metrics) write(w http.ResponseWriter) {
 
 	var output strings.Builder
 	writeCounter(&output, "proxy_requests_total", "Total HTTP requests handled by the proxy.", m.requests.Load())
-	writeCounter(&output, "proxy_errors_total", "Total responses with a 5xx status.", m.errors.Load())
+	writeCounter(&output, "proxy_errors_total", "Total requests with a 5xx response or aborted transfer.", m.errors.Load())
+	writeCounter(&output, "proxy_aborted_total", "Total response transfers aborted before completion.", m.aborted.Load())
 	writeGauge(&output, "proxy_in_flight", "Requests currently being forwarded upstream.", m.inFlight.Load())
 	writeCounter(&output, "proxy_rate_limited_total", "Requests rejected by the rate limiter.", m.rateLimited.Load())
 	writeCounter(&output, "proxy_circuit_open_total", "Requests rejected because the upstream circuit was open.", m.circuitOpen.Load())
-	writeCounter(&output, "proxy_upstream_failures_total", "Upstream attempts that produced a 5xx response or proxy error.", m.upstreamFailures.Load())
+	writeCounter(&output, "proxy_upstream_failures_total", "Upstream attempts that produced a 5xx response, proxy error, or aborted transfer.", m.upstreamFailures.Load())
 	_, _ = io.WriteString(w, output.String())
 }
 
